@@ -14,10 +14,6 @@ jobs:
     with:
       os: ${{ matrix.os }}
       configuration: ${{ matrix.configuration }}
-    secrets:
-      # List secrets required for the Build job
-      # For example:
-      # MY_SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
 
   Validate-Tests:
     strategy:
