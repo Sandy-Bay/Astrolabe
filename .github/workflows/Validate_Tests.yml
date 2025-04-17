@@ -36,6 +36,7 @@ jobs:
       # Add MSBuild to Path
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+        if: runner.os == 'Windows'
 
       # Cache the NuGet packages to improve run-speed
       - name: Cache NuGet packages
