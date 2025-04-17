@@ -1,0 +1,34 @@
+name: Validate PR
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  Validate-Build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        configuration: [Debug, Release]
+    uses: ./.github/workflows/Validate_Build.yml
+    with:
+      os: ${{ matrix.os }}
+      configuration: ${{ matrix.configuration }}
+    secrets:
+      # List secrets required for the Build job
+      # For example:
+      # MY_SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
+
+  Validate-Tests:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        configuration: [Debug, Release]
+    uses: ./.github/workflows/Validate_Tests.yml
+    with:
+      os: ${{ matrix.os }}
+      configuration: ${{ matrix.configuration }}
+    secrets:
+      # List secrets required for the Tests job
+      # For example:
+      # MY_TEST_SECRET: ${{ secrets.MY_TEST_SECRET }}
