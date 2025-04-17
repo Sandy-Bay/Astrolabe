@@ -12,11 +12,6 @@ on:
         description: 'Build configuration (Debug or Release)'
         required: true
         type: string
-    secrets:
-      # List your secrets here (if any)
-      # For example:
-      # MY_SECRET_KEY:
-      #   required: true
 
 jobs:
   Build:
