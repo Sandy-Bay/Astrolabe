@@ -1,0 +1,59 @@
+name: Validate Build
+
+# This template will be invoked by other workflows as a reusable job.
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: 'Operating system (windows-latest or ubuntu-latest)'
+        required: true
+        type: string
+      configuration:
+        description: 'Build configuration (Debug or Release)'
+        required: true
+        type: string
+    secrets:
+      # List your secrets here (if any)
+      # For example:
+      # MY_SECRET_KEY:
+      #   required: true
+
+jobs:
+  Build:
+    runs-on: ${{ inputs.os }}
+    env:
+      Solution_Name: Astrolabe-Backend/Astrolabe-Backend.sln
+      Test_Project_Path: Astrolabe-Backend.Tests/Astrolabe-Backend.Tests.csproj
+    steps:
+      # Checkout the repository
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+    
+      # Install .NET Core workload
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+    
+      # Add MSBuild to Path
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+    
+      # Cache the NuGet packages to improve run-speed
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+    
+      # Restore the dependencies
+      - name: Restore Dependencies
+        run: dotnet restore ${{ env.Solution_Name }}
+    
+      # Build the project
+      - name: Build Solution
+        run: dotnet build ${{ env.Solution_Name }} --configuration ${{ inputs.configuration }} --no-restore
